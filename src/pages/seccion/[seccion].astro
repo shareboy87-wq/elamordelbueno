@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import FilaArticulo from '../../components/FilaArticulo.astro';
+import Anuncio from '../../components/Anuncio.astro';
+import { SECCIONES } from '../../consts';
+
+export async function getStaticPaths() {
+  return SECCIONES.map((s) => ({ params: { seccion: s.id }, props: { s } }));
+}
+
+const { s } = Astro.props;
+
+const articulos = (
+  await getCollection('articulos', ({ data }) => !data.borrador && data.seccion === s.id)
+).sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+---
+
+<Base titulo={s.nombre} descripcion={s.resumen}>
+  <div class="contenedor">
+    <section class="indice" style="margin-top:52px">
+      <div class="rotulo">
+        <h2>{s.nombre}</h2>
+        <p class="resumen">{s.resumen}</p>
+      </div>
+
+      {articulos.length === 0 ? (
+        <p>Aquí todavía no hay nada publicado. Vuelve pronto.</p>
+      ) : (
+        <ul class="filas">
+          {
+            articulos.map((a) => (
+              <FilaArticulo
+                id={a.id}
+                titulo={a.data.titulo}
+                bajada={a.data.bajada}
+                seccion={a.data.seccion}
+                portada={a.data.portada}
+                alt={a.data.alt}
+                cuerpo={a.body ?? ''}
+              />
+            ))
+          }
+        </ul>
+      )}
+    </section>
+  </div>
+  <Anuncio />
+</Base>

@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITIO } from '../consts';
+---
+
+<Base titulo="Contacto" descripcion="Cómo escribirle a Amor del Bueno.">
+  <div class="contenedor">
+    <section class="pagina">
+      <h1>Contacto</h1>
+      <div class="prosa">
+        <p>
+          Si tienes una duda, quieres contar tu historia o proponer un tema, escribe a:
+        </p>
+        <blockquote>
+          <p><a href={`mailto:${SITIO.correo}`}>{SITIO.correo}</a></p>
+        </blockquote>
+        <p>
+          Contestamos todo lo que se pueda, aunque a veces tarda unos días.
+        </p>
+        <h2>Si quieres que contemos tu caso</h2>
+        <p>
+          Mándalo con el detalle que quieras. Si lo publicamos, cambiamos nombres, lugares y
+          cualquier dato que te identifique. Nunca publicamos algo sin avisarte primero.
+        </p>
+        <h2>Aviso importante</h2>
+        <p>
+          Este sitio no da terapia ni orientación clínica. Si estás pasando por una crisis o
+          sientes que te rebasa, busca a un profesional de salud mental en tu localidad.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>

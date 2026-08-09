@@ -1,0 +1,88 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import FilaArticulo from '../components/FilaArticulo.astro';
+import Anuncio from '../components/Anuncio.astro';
+import { SITIO, SECCIONES } from '../consts';
+import { tiempoLectura } from '../utils';
+
+const todos = (await getCollection('articulos', ({ data }) => !data.borrador)).sort(
+  (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf()
+);
+
+const portada = todos.find((a) => a.data.destacado) ?? todos[0];
+const resto = todos.filter((a) => a.id !== portada?.id);
+
+const seccionPortada = portada
+  ? (SECCIONES.find((s) => s.id === portada.data.seccion)?.nombre ?? portada.data.seccion)
+  : '';
+---
+
+<Base titulo={SITIO.nombre} imagen={portada?.data.portada}>
+  <div class="contenedor">
+    {
+      portada && (
+        <article class="destacado">
+          <div class="lienzo">
+            {portada.data.portada && (
+              <img
+                src={portada.data.portada}
+                alt={portada.data.alt ?? ''}
+                width="900"
+                height="675"
+              />
+            )}
+          </div>
+          <div class="texto">
+            <a href={`/articulo/${portada.id}`}>
+              <p class="etiqueta">{seccionPortada}</p>
+              <h1 class="titular">{portada.data.titulo}</h1>
+              <p class="bajada">{portada.data.bajada}</p>
+              <span class="leer">
+                Leer · {tiempoLectura(portada.body ?? '')} min
+              </span>
+            </a>
+          </div>
+        </article>
+      )
+    }
+
+    {
+      !portada && (
+        <section class="pagina">
+          <h1>Todavía no hay artículos</h1>
+          <p>
+            Escribe el primero desde el panel en <code>/admin</code> y aparecerá aquí en cuanto
+            publiques.
+          </p>
+        </section>
+      )
+    }
+
+    {resto.length > 0 && (
+      <section class="indice">
+        <div class="rotulo">
+          <h2>Índice</h2>
+          <p class="resumen">Lo más reciente, con el tiempo que te va a tomar</p>
+        </div>
+        <ul class="filas">
+          {
+            resto.map((a) => (
+              <FilaArticulo
+                id={a.id}
+                titulo={a.data.titulo}
+                bajada={a.data.bajada}
+                seccion={a.data.seccion}
+                portada={a.data.portada}
+                alt={a.data.alt}
+                cuerpo={a.body ?? ''}
+              />
+            ))
+          }
+        </ul>
+      </section>
+    )}
+  </div>
+
+  <Anuncio />
+</Base>

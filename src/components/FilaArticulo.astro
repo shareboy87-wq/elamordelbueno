@@ -1,0 +1,32 @@
+---
+import { SECCIONES } from '../consts';
+import { tiempoLectura } from '../utils';
+
+interface Props {
+  id: string;
+  titulo: string;
+  bajada: string;
+  seccion: string;
+  portada?: string;
+  alt?: string;
+  cuerpo: string;
+}
+
+const { id, titulo, bajada, seccion, portada, alt, cuerpo } = Astro.props;
+const nombreSeccion = SECCIONES.find((s) => s.id === seccion)?.nombre ?? seccion;
+const minutos = tiempoLectura(cuerpo);
+---
+
+<li class="fila">
+  <a href={`/articulo/${id}`}>
+    <div class="miniatura">
+      {portada && <img src={portada} alt={alt ?? ''} loading="lazy" width="88" height="88" />}
+    </div>
+    <div class="cuerpo">
+      <p class="etiqueta">{nombreSeccion}</p>
+      <h3 class="titular">{titulo}</h3>
+      <p class="bajada">{bajada}</p>
+    </div>
+    <span class="tiempo">{minutos} min</span>
+  </a>
+</li>

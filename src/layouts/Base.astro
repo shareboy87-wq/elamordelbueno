@@ -1,0 +1,142 @@
+---
+import '../styles/global.css';
+import { SITIO, SECCIONES } from '../consts';
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+  imagen?: string;
+  tipo?: 'website' | 'article';
+  fecha?: Date;
+  noIndexar?: boolean;
+}
+
+const {
+  titulo,
+  descripcion = SITIO.descripcion,
+  imagen,
+  tipo = 'website',
+  fecha,
+  noIndexar = false,
+} = Astro.props;
+
+const url = new URL(Astro.url.pathname, Astro.site);
+const imagenAbs = imagen ? new URL(imagen, Astro.site).href : undefined;
+const tituloCompleto =
+  titulo === SITIO.nombre ? `${SITIO.nombre} · ${SITIO.lema}` : `${titulo} · ${SITIO.nombre}`;
+const ruta = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={url.href} />
+    {noIndexar && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content={tipo} />
+    <meta property="og:site_name" content={SITIO.nombre} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={url.href} />
+    <meta property="og:locale" content="es_MX" />
+    {imagenAbs && <meta property="og:image" content={imagenAbs} />}
+    <meta name="twitter:card" content={imagenAbs ? 'summary_large_image' : 'summary'} />
+
+    {fecha && <meta property="article:published_time" content={fecha.toISOString()} />}
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITIO.nombre} href="/rss.xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,500&family=Archivo:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+      rel="stylesheet"
+    />
+
+    {
+      tipo === 'article' && (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: titulo,
+            description: descripcion,
+            datePublished: fecha?.toISOString(),
+            image: imagenAbs,
+            author: { '@type': 'Organization', name: SITIO.nombre },
+            publisher: { '@type': 'Organization', name: SITIO.nombre },
+            mainEntityOfPage: url.href,
+          })}
+        />
+      )
+    }
+
+    {
+      SITIO.adsense && (
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${SITIO.adsense}`}
+          crossorigin="anonymous"
+        />
+      )
+    }
+  </head>
+
+  <body>
+    <a class="saltar" href="#contenido">Ir al contenido</a>
+
+    <header class="cabecera">
+      <div class="contenedor cabecera-fila">
+        <a class="marca" href="/">
+          <span class="nombre">Amor del <em>Bueno</em></span>
+          <span class="lema">{SITIO.lema}</span>
+        </a>
+        <nav aria-label="Secciones">
+          <ul class="secciones">
+            {
+              SECCIONES.map((s) => (
+                <li>
+                  <a
+                    href={`/seccion/${s.id}`}
+                    aria-current={ruta.startsWith(`/seccion/${s.id}`) ? 'page' : undefined}
+                  >
+                    {s.nombre}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <slot />
+    </main>
+
+    <footer class="pie">
+      <div class="contenedor">
+        <div class="pie-fila">
+          <span class="nombre">Amor del Bueno</span>
+          <nav aria-label="Enlaces del sitio">
+            <a href="/acerca">Acerca de</a>
+            <a href="/contacto">Contacto</a>
+            <a href="/privacidad">Privacidad</a>
+            <a href="/rss.xml">RSS</a>
+          </nav>
+        </div>
+        <p class="aviso">
+          © {new Date().getFullYear()} Amor del Bueno. Los textos son contenido original.
+          Esto no sustituye la orientación de un profesional de salud mental.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

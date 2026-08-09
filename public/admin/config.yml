@@ -1,0 +1,86 @@
+# ============================================================
+#  Panel de administracion (Decap CMS)
+#  Entra en  https://tudominio.com/admin
+# ============================================================
+
+backend:
+  name: github
+  # CAMBIA ESTO por tu usuario/repositorio de GitHub
+  repo: tu-usuario/amor-del-bueno
+  branch: main
+
+# Para escribir desde tu propia computadora sin OAuth:
+#   1) npx decap-server      (en otra terminal)
+#   2) npm run dev
+#   3) abre  http://localhost:4321/admin
+local_backend: true
+
+media_folder: "public/imagenes"
+public_folder: "/imagenes"
+
+locale: es
+
+collections:
+  - name: "articulos"
+    label: "Artículos"
+    label_singular: "Artículo"
+    folder: "src/content/articulos"
+    create: true
+    slug: "{{slug}}"
+    preview_path: "articulo/{{slug}}"
+    summary: "{{titulo}}  ·  {{seccion}}"
+    sortable_fields: ["fecha", "titulo"]
+    fields:
+      - label: "Título"
+        name: "titulo"
+        widget: "string"
+        hint: "El que se ve grande. Entre 45 y 65 caracteres funciona mejor en Google."
+
+      - label: "Bajada"
+        name: "bajada"
+        widget: "text"
+        hint: "Una o dos líneas. Es lo que se usa como descripción en Google y al compartir."
+
+      - label: "Sección"
+        name: "seccion"
+        widget: "select"
+        options:
+          - { label: "Cartas", value: "cartas" }
+          - { label: "Consejos", value: "consejos" }
+          - { label: "Historias", value: "historias" }
+          - { label: "Señales", value: "senales" }
+
+      - label: "Fecha"
+        name: "fecha"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        picker_utc: true
+
+      - label: "Imagen de portada"
+        name: "portada"
+        widget: "image"
+        required: false
+        hint: "Horizontal, mínimo 1200 px de ancho."
+
+      - label: "Texto alternativo de la imagen"
+        name: "alt"
+        widget: "string"
+        required: false
+        hint: "Describe la imagen para quien no puede verla."
+
+      - label: "Destacado en portada"
+        name: "destacado"
+        widget: "boolean"
+        default: false
+        hint: "Solo uno a la vez. Es el que sale grande arriba."
+
+      - label: "Borrador"
+        name: "borrador"
+        widget: "boolean"
+        default: false
+        hint: "Si está encendido, no se publica."
+
+      - label: "Cuerpo"
+        name: "body"
+        widget: "markdown"

@@ -1,0 +1,116 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITIO } from '../consts';
+
+const actualizado = '29 de julio de 2026';
+---
+
+<Base
+  titulo="Política de privacidad"
+  descripcion="Cómo se usan las cookies y los datos en Amor del Bueno."
+>
+  <div class="contenedor">
+    <section class="pagina">
+      <h1>Política de privacidad</h1>
+      <div class="prosa">
+        <p><em>Última actualización: {actualizado}</em></p>
+
+        <p>
+          En <strong>Amor del Bueno</strong> respetamos tu privacidad. Aquí te explicamos qué
+          información se recoge cuando visitas el sitio y para qué se usa.
+        </p>
+
+        <h2>Qué información se recoge</h2>
+        <p>
+          No te pedimos registro ni datos personales para leer. Si nos escribes por correo,
+          guardamos únicamente lo que tú nos mandas para poder contestarte.
+        </p>
+        <p>
+          Como cualquier sitio web, se registran datos técnicos de forma automática:
+          dirección IP aproximada, tipo de navegador, dispositivo, páginas visitadas y la
+          página desde la que llegaste. Sirven para entender qué se lee y detectar fallas.
+        </p>
+
+        <h2>Cookies</h2>
+        <p>
+          Una cookie es un archivo pequeño que se guarda en tu navegador. Este sitio usa
+          cookies propias para funciones básicas, y cookies de terceros para publicidad y
+          medición.
+        </p>
+        <p>
+          Puedes borrar o bloquear las cookies desde la configuración de tu navegador. Si lo
+          haces, el sitio sigue funcionando.
+        </p>
+
+        <h2>Publicidad de terceros</h2>
+        <p>
+          Este sitio se financia con publicidad. Trabajamos con <strong>Google AdSense</strong>,
+          proveedor externo de Google.
+        </p>
+        <ul>
+          <li>
+            Google usa cookies para mostrar anuncios basados en tus visitas previas a este y
+            otros sitios web.
+          </li>
+          <li>
+            El uso que Google hace de las cookies de publicidad le permite mostrar anuncios a
+            los usuarios según sus visitas a nuestros sitios y a otros de internet.
+          </li>
+          <li>
+            Puedes desactivar la publicidad personalizada en la
+            <a
+              href="https://www.google.com/settings/ads"
+              rel="noopener nofollow"
+              target="_blank">configuración de anuncios de Google</a
+            >, o desactivar las cookies de otros proveedores en
+            <a href="https://www.aboutads.info/choices/" rel="noopener nofollow" target="_blank"
+              >aboutads.info</a
+            >.
+          </li>
+        </ul>
+        <p>
+          Los proveedores externos, incluido Google, también pueden usar cookies para
+          publicar anuncios según las visitas anteriores del usuario a este sitio.
+        </p>
+
+        <h2>Medición de audiencia</h2>
+        <p>
+          Usamos herramientas de estadísticas para saber cuántas personas leen y qué leen. La
+          información se maneja de forma agregada y no se usa para identificarte.
+        </p>
+
+        <h2>Enlaces a otros sitios</h2>
+        <p>
+          Cuando enlazamos a otras páginas, esas páginas tienen sus propias políticas. No
+          respondemos por el manejo de datos que hagan.
+        </p>
+
+        <h2>Menores de edad</h2>
+        <p>
+          Este sitio está dirigido a personas mayores de edad. No recogemos información de
+          menores de forma intencional.
+        </p>
+
+        <h2>Tus derechos</h2>
+        <p>
+          Si quieres saber qué información tenemos tuya, corregirla o pedir que la borremos,
+          escribe a <a href={`mailto:${SITIO.correo}`}>{SITIO.correo}</a> y lo atendemos.
+        </p>
+
+        <h2>Cambios a esta política</h2>
+        <p>
+          Si cambia algo, actualizamos esta página y la fecha de arriba.
+        </p>
+
+        <hr />
+        <p>
+          <em
+            >Nota: este texto es una base general. Ajústalo a lo que realmente uses en el sitio
+            y, si vas a operar en varios países, conviene que lo revise alguien con
+            conocimiento legal de tu jurisdicción.</em
+          >
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,91 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Anuncio from '../../components/Anuncio.astro';
+import FilaArticulo from '../../components/FilaArticulo.astro';
+import { SECCIONES } from '../../consts';
+import { formatoFecha, fechaISO, tiempoLectura } from '../../utils';
+
+export async function getStaticPaths() {
+  const articulos = await getCollection('articulos', ({ data }) => !data.borrador);
+  return articulos.map((a) => ({ params: { slug: a.id }, props: { a } }));
+}
+
+const { a } = Astro.props;
+const { Content } = await render(a);
+
+const nombreSeccion = SECCIONES.find((s) => s.id === a.data.seccion)?.nombre ?? a.data.seccion;
+const minutos = tiempoLectura(a.body ?? '');
+
+const relacionados = (
+  await getCollection(
+    'articulos',
+    ({ data, id }) => !data.borrador && data.seccion === a.data.seccion && id !== a.id
+  )
+)
+  .sort((x, y) => y.data.fecha.valueOf() - x.data.fecha.valueOf())
+  .slice(0, 3);
+---
+
+<Base
+  titulo={a.data.titulo}
+  descripcion={a.data.bajada}
+  imagen={a.data.portada}
+  tipo="article"
+  fecha={a.data.fecha}
+>
+  <div class="contenedor">
+    <article class="articulo">
+      <header class="articulo-cabeza">
+        <p class="etiqueta">{nombreSeccion}</p>
+        <h1>{a.data.titulo}</h1>
+        <p class="bajada">{a.data.bajada}</p>
+        <div class="credito">
+          <time datetime={fechaISO(a.data.fecha)}>{formatoFecha(a.data.fecha)}</time>
+          <span class="punto">◆</span>
+          <span>{minutos} min de lectura</span>
+        </div>
+      </header>
+
+      {a.data.portada && (
+        <img
+          class="portada-articulo"
+          src={a.data.portada}
+          alt={a.data.alt ?? ''}
+          width="1200"
+          height="800"
+        />
+      )}
+
+      <div class="prosa">
+        <Content />
+      </div>
+    </article>
+
+    <Anuncio />
+
+    {relacionados.length > 0 && (
+      <section class="indice">
+        <div class="rotulo">
+          <h2>Sigue leyendo</h2>
+          <p class="resumen">Más de {nombreSeccion.toLowerCase()}</p>
+        </div>
+        <ul class="filas">
+          {
+            relacionados.map((r) => (
+              <FilaArticulo
+                id={r.id}
+                titulo={r.data.titulo}
+                bajada={r.data.bajada}
+                seccion={r.data.seccion}
+                portada={r.data.portada}
+                alt={r.data.alt}
+                cuerpo={r.body ?? ''}
+              />
+            ))
+          }
+        </ul>
+      </section>
+    )}
+  </div>
+</Base>
