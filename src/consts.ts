@@ -6,7 +6,7 @@ export const SITIO = {
   autor: 'Amor del Bueno',
   correo: 'hola@elamordelbueno.com',
   // Pega aquí tu ID de AdSense cuando te aprueben: 'ca-pub-0000000000000000'
-  adsense: '',
+  adsense: 'ca-pub-3438992886830809',
 };
 
 export const SECCIONES = [
